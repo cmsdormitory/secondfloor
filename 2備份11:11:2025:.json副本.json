@@ -1,0 +1,485 @@
+{
+  "users": [
+    {
+      "id": "ADMIN001",
+      "name": "系統管理員",
+      "barcodeCode": "ADMIN001",
+      "points": 0,
+      "isAdmin": true
+    },
+    {
+      "id": "250402",
+      "name": "鄭日朗",
+      "barcodeCode": "USER836007500",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250405",
+      "name": "夏榮爍",
+      "barcodeCode": "USER142823380",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250408",
+      "name": "梁賀珊",
+      "barcodeCode": "USER180040109",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250417",
+      "name": "趙泓淙",
+      "barcodeCode": "USER207940640",
+      "points": 100,
+      "isAdmin": false
+    },
+    {
+      "id": "250421",
+      "name": "黃浚曦",
+      "barcodeCode": "USER257390337",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250404",
+      "name": "姚翔炘",
+      "barcodeCode": "USER290890392",
+      "points": 85,
+      "isAdmin": false
+    },
+    {
+      "id": "250418",
+      "name": "朱柏軒",
+      "barcodeCode": "USER321322352",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250410",
+      "name": "何家浚",
+      "barcodeCode": "USER354840159",
+      "points": 40,
+      "isAdmin": false
+    },
+    {
+      "id": "250412",
+      "name": "程瑞恆",
+      "barcodeCode": "USER387839507",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250413",
+      "name": "張哲鳴",
+      "barcodeCode": "USER424038651",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "250415",
+      "name": "謝智鋒",
+      "barcodeCode": "USER456271766",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "240401",
+      "name": "周信宇",
+      "barcodeCode": "USER494637813",
+      "points": 100,
+      "isAdmin": false
+    },
+    {
+      "id": "240415",
+      "name": "袁梓峰",
+      "barcodeCode": "USER550188924",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "240417",
+      "name": "吳英誠",
+      "barcodeCode": "USER572803024",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "240420",
+      "name": "朱嘉俊",
+      "barcodeCode": "USER601519491",
+      "points": 105,
+      "isAdmin": false
+    },
+    {
+      "id": "240431",
+      "name": "黎晉丞",
+      "barcodeCode": "USER662819207",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "240416",
+      "name": "康義豐",
+      "barcodeCode": "USER703919952",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "240421",
+      "name": "連祉舜",
+      "barcodeCode": "USER730953102",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "240425",
+      "name": "張靖熙",
+      "barcodeCode": "USER760936545",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "240407",
+      "name": "唐梓朗",
+      "barcodeCode": "USER788086652",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "230404",
+      "name": "陳煜軒",
+      "barcodeCode": "USER812769871",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "230420",
+      "name": "陳嘉豪",
+      "barcodeCode": "USER842372561",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "230407",
+      "name": "向德誠",
+      "barcodeCode": "USER863968801",
+      "points": 95,
+      "isAdmin": false
+    },
+    {
+      "id": "230401",
+      "name": "陳澤峰",
+      "barcodeCode": "USER892635110",
+      "points": 100,
+      "isAdmin": false
+    },
+    {
+      "id": "230402",
+      "name": "鍾志凌",
+      "barcodeCode": "USER915219869",
+      "points": 90,
+      "isAdmin": false
+    },
+    {
+      "id": "220416",
+      "name": "黃悅庭",
+      "barcodeCode": "USER938774908",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "240427",
+      "name": "盧鴻岳",
+      "barcodeCode": "USER965352204",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "220409",
+      "name": "羅偉亨",
+      "barcodeCode": "USER991754297",
+      "points": 130,
+      "isAdmin": false
+    },
+    {
+      "id": "220410",
+      "name": "潘嘉樂",
+      "barcodeCode": "USER018685578",
+      "points": 85,
+      "isAdmin": false
+    },
+    {
+      "id": "240403",
+      "name": "劉卓恆",
+      "barcodeCode": "USER053267204",
+      "points": 80,
+      "isAdmin": false
+    },
+    {
+      "id": "USER949858343",
+      "name": "USER949858343",
+      "barcodeCode": "USER949858343",
+      "points": 0,
+      "isAdmin": true
+    }
+  ],
+  "prizes": [
+    {
+      "id": "P7350798",
+      "name": "零食",
+      "points": 5,
+      "icon": "A"
+    },
+    {
+      "id": "P2816603",
+      "name": "零食x2",
+      "points": 8,
+      "icon": "B"
+    },
+    {
+      "id": "P8534707",
+      "name": "外出晚膳",
+      "points": 200,
+      "icon": "C"
+    },
+    {
+      "id": "P0866565",
+      "name": "自修休息半小時",
+      "points": 10,
+      "icon": "D"
+    },
+    {
+      "id": "P0082871",
+      "name": "手機一小時",
+      "points": 50,
+      "icon": "E"
+    },
+    {
+      "id": "P3483923",
+      "name": "手機半小時",
+      "points": 35,
+      "icon": "F"
+    },
+    {
+      "id": "P9466257",
+      "name": "自修休息一小時",
+      "points": 25,
+      "icon": "G"
+    },
+    {
+      "id": "P3750508",
+      "name": "珍珠奶茶",
+      "points": 80,
+      "icon": "H"
+    },
+    {
+      "id": "P1583514",
+      "name": "SWITCH",
+      "points": 100,
+      "icon": "I"
+    },
+    {
+      "id": "P5298891",
+      "name": "電梯卷五次",
+      "points": 25,
+      "icon": "J"
+    }
+  ],
+  "history": [
+    {
+      "userId": "240403",
+      "timestamp": 1762352071485,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "220410",
+      "timestamp": 1762352052185,
+      "pointsChange": 85,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "220409",
+      "timestamp": 1762352009418,
+      "pointsChange": 130,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240427",
+      "timestamp": 1762351985869,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "220416",
+      "timestamp": 1762351963618,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "230402",
+      "timestamp": 1762351935818,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "230401",
+      "timestamp": 1762351910502,
+      "pointsChange": 100,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "230407",
+      "timestamp": 1762351890854,
+      "pointsChange": 95,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "230420",
+      "timestamp": 1762351862070,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "230404",
+      "timestamp": 1762351833285,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240407",
+      "timestamp": 1762351811369,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240425",
+      "timestamp": 1762351786537,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240421",
+      "timestamp": 1762351758420,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240416",
+      "timestamp": 1762351729320,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240431",
+      "timestamp": 1762351684287,
+      "pointsChange": 90,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240420",
+      "timestamp": 1762351656137,
+      "pointsChange": 105,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240417",
+      "timestamp": 1762351598437,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240415",
+      "timestamp": 1762351570271,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "240401",
+      "timestamp": 1762351533738,
+      "pointsChange": 100,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250415",
+      "timestamp": 1762351484438,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250413",
+      "timestamp": 1762351449071,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250412",
+      "timestamp": 1762351415221,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250410",
+      "timestamp": 1762351377173,
+      "pointsChange": 40,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250418",
+      "timestamp": 1762351349905,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250404",
+      "timestamp": 1762351315238,
+      "pointsChange": 85,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250421",
+      "timestamp": 1762351287639,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250417",
+      "timestamp": 1762351232572,
+      "pointsChange": 100,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250408",
+      "timestamp": 1762351205073,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250405",
+      "timestamp": 1762351178089,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "250402",
+      "timestamp": 1762351138257,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "123",
+      "timestamp": 1762349802415,
+      "pointsChange": 999,
+      "reason": "初始積分"
+    },
+    {
+      "userId": "a23105",
+      "timestamp": 1762349420620,
+      "pointsChange": 80,
+      "reason": "初始積分"
+    }
+  ],
+  "exportDate": "2025-11-05T14:46:35.047Z"
+}
