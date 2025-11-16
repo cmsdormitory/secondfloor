@@ -1,1 +1,2349 @@
 # cmos.dormitory
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明馬二樓積分兌換</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header i {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #2575fc;
+        }
+        
+        .card-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .login-section {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .login-card {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: #1a68e8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+        }
+        
+        .btn-warning:hover {
+            background: #d35400;
+        }
+        
+        .btn-info {
+            background: #3498db;
+        }
+        
+        .btn-info:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .barcode-scan {
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .barcode-scan:hover {
+            border-color: #2575fc;
+            background: rgba(37, 117, 252, 0.05);
+        }
+        
+        .barcode-scan i {
+            font-size: 48px;
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        
+        .barcode-scan p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .user-info {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .points {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #2575fc;
+            color: #2575fc;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .prize-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .prize-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .prize-image {
+            width: 100%;
+            height: 150px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #2575fc;
+        }
+        
+        .prize-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .prize-points {
+            color: #2575fc;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-controls .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .users-table, .history-table, .prizes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .users-table th, .users-table td,
+        .history-table th, .history-table td,
+        .prizes-table th, .prizes-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .users-table th, .history-table th, .prizes-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .users-table tr:hover, .history-table tr:hover, .prizes-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            margin-right: 5px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            margin-top: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #2ecc71;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-points {
+            font-weight: bold;
+        }
+        
+        .points-positive {
+            color: #2ecc71;
+        }
+        
+        .points-negative {
+            color: #e74c3c;
+        }
+        
+        .barcode-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .barcode-container canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .barcode-placeholder {
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .scan-area {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        #scanner-container {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #scanner-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+        
+        .scan-line {
+            width: 80%;
+            height: 2px;
+            background: #2575fc;
+            position: relative;
+            animation: scan 2s infinite linear;
+        }
+        
+        @keyframes scan {
+            0% { top: -50%; }
+            100% { top: 150%; }
+        }
+        
+        .scan-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .user-barcode {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .login-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .login-option-btn {
+            flex: 1;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .login-option-btn.active {
+            background: #2575fc;
+            color: white;
+            border-color: #2575fc;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        .data-management {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .data-management .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2575fc;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .reason-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .reason-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .login-section {
+                flex-direction: column;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+            }
+            
+            .prizes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .users-table, .history-table, .prizes-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .login-options {
+                flex-direction: column;
+            }
+            
+            .data-management {
+                flex-direction: column;
+            }
+            
+            .user-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>明馬二樓宿舍積分兌換</h1>
+            <p>明愛馬鞍山中學二樓宿舍專用</p>
+        </div>
+        
+        <!-- 登陸區域 -->
+        <div class="login-section" id="loginSection">
+            <!-- 用戶登錄 -->
+            <div class="card login-card">
+                <div class="card-header">
+                    <i class="fas fa-user"></i>
+                    <h2>用戶登錄</h2>
+                </div>
+                
+                <div class="login-options">
+                    <div class="login-option-btn active" id="userCodeLoginBtn">用戶編號登陸</div>
+                    <div class="login-option-btn" id="userBarcodeLoginBtn">QRcode登陸</div>
+                </div>
+                
+                <div id="userCodeLoginForm">
+                    <div class="form-group">
+                        <label for="userIdInput">用戶編號</label>
+                        <input type="text" id="userIdInput" class="form-control" placeholder="輸入用戶編號">
+                    </div>
+                    <button class="btn btn-block" id="userLoginBtn">用戶登錄</button>
+                </div>
+                
+                <div id="userBarcodeLoginForm" style="display: none;">
+                    <div class="barcode-scan" id="userBarcodeScan">
+                        <i class="fas fa-barcode"></i>
+                        <p>點擊此處掃描QRcode</p>
+                        <p class="small">並將QRcode對準攝像頭</p>
+                    </div>
+                </div>
+                
+                <div class="user-info" style="display: none;" id="userInfo">
+                    <div>
+                        <h3 id="userName">张三</h3>
+                        <p>用户编号: <span id="userId">U1001</span></p>
+                    </div>
+                    <div class="points" id="userPoints">1500</div>
+                </div>
+            </div>
+            
+            <!-- 管理员登录 -->
+            <div class="card login-card">
+                <div class="card-header">
+                    <i class="fas fa-user-shield"></i>
+                    <h2>管理员登录</h2>
+                </div>
+                
+                <div class="login-options">
+                    <div class="login-option-btn active" id="adminCodeLoginBtn">管理員編號登陸</div>
+                    <div class="login-option-btn" id="adminBarcodeLoginBtn">管理員QRcode登陸</div>
+                </div>
+                
+                <div id="adminCodeLoginForm">
+                    <div class="form-group">
+                        <label for="adminId">管理員編號</label>
+                        <input type="text" id="adminId" class="form-control" placeholder="輸入管理員編號">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminPassword">管理員密碼</label>
+                        <input type="password" id="adminPassword" class="form-control" placeholder="請輸入管理員密碼">
+                    </div>
+                    
+                    <button class="btn btn-block" id="adminLoginBtn">管理員登陸</button>
+                </div>
+                
+                <div id="adminBarcodeLoginForm" style="display: none;">
+                    <div class="barcode-scan" id="adminBarcodeScan">
+                        <i class="fas fa-barcode"></i>
+                        <p>點擊此處掃描QRcode</p>
+                        <p class="small">並將QRcode對準攝像頭</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 用户仪表盘 -->
+        <div class="dashboard card" id="userDashboard">
+            <div class="card-header">
+                <i class="fas fa-gift"></i>
+                <h2>積分兌換中心</h2>
+            </div>
+            
+            <div class="user-info">
+                <div>
+                    <h3 id="dashboardUserName">张三</h3>
+                    <p>用戶編號: <span id="dashboardUserId">U1001</span></p>
+                    <p>QRcode編碼: <span id="dashboardUserBarcode">BARCODE001</span></p>
+                </div>
+                <div class="points" id="dashboardUserPoints">1500</div>
+            </div>
+            
+            <div class="user-barcode">
+                <h4>我的QRcode</h4>
+                <div id="userBarcodeDisplay"></div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="prizes">獎品兌換</div>
+                <div class="tab" data-tab="history">積分歷史</div>
+            </div>
+            
+            <div class="tab-content active" id="prizes-tab">
+                <h3 style="margin-bottom: 15px;">可用獎品</h3>
+                <div class="prizes-grid" id="prizesGrid">
+                    <!-- 奖品将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="history-tab">
+                <h3 style="margin-bottom: 15px;">積分歷史紀錄</h3>
+                <div id="userHistoryContent">
+                    <!-- 用户积分历史将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <button class="btn btn-block logout-btn" id="userLogoutBtn">退出登陸</button>
+        </div>
+        
+        <!-- 管理员仪表盘 -->
+        <div class="dashboard card" id="adminDashboard">
+            <div class="card-header">
+                <i class="fas fa-cogs"></i>
+                <h2>積分管理系統</h2>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="users">用戶管理</div>
+                <div class="tab" data-tab="prizes-admin">獎品管理</div>
+                <div class="tab" data-tab="history-admin">積分歷史</div>
+                <div class="tab" data-tab="system-admin">系統管理</div>
+            </div>
+            
+            <div class="tab-content active" id="users-tab">
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">總用戶數</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPoints">0</div>
+                        <div class="stat-label">總積分</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgPoints">0</div>
+                        <div class="stat-label">平均積分</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeUsers">0</div>
+                        <div class="stat-label">活躍用戶</div>
+                    </div>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="searchUser" class="form-control" placeholder="輸入用戶編號·姓名或QRcode編碼">
+                    <button class="btn" id="searchUserBtn">搜索</button>
+                    <button class="btn btn-secondary" id="clearSearchBtn">清除</button>
+                </div>
+                
+                <div class="admin-controls">
+                    <div class="form-group">
+                        <label for="pointsChange">積分變更</label>
+                        <input type="number" id="pointsChange" class="form-control" placeholder="輸入積分變更值">
+                    </div>
+                    <div class="form-group">
+                        <label for="pointsReason">變更原因</label>
+                        <select id="pointsReason" class="reason-select">
+                            <option value="">-- 選擇原因 --</option>
+                            <option value="任務獎勵">任務獎勵</option>
+                            <option value="活活動獎勵">活動獎勵</option>
+                            <option value="挑戰獎勵">挑戰獎勵</option>
+                            <option value="推薦獎勵">推薦獎勵</option>
+                            <option value="管理員調整">管理員調整</option>
+                            <option value="其他">其他</option>
+                        </select>
+                        <input type="text" id="customReason" class="reason-input" placeholder="輸入其他原因" style="display: none;">
+                    </div>
+                    <button class="btn" id="updatePointsBtn" style="align-self: flex-end;">更新積分</button>
+                    <button class="btn btn-success" id="addUserBtn" style="align-self: flex-end;">添加用戶</button>
+                    <button class="btn btn-info" id="exportUsersBtn" style="align-self: flex-end;">導出用戶</button>
+                </div>
+                
+                <h3>用戶列表</h3>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>用戶編號</th>
+                            <th>姓名</th>
+                            <th>QRcode編碼</th>
+                            <th>當前積分</th>
+                            <th>用戶類型</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- 用户数据将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="tab-content" id="prizes-admin-tab">
+                <div class="admin-controls">
+                    <div class="form-group">
+                        <label for="prizeName">獎品名稱</label>
+                        <input type="text" id="prizeName" class="form-control" placeholdr="輸入獎品名稱e">
+                    </div>
+                    <div class="form-group">
+                        <label for="prizePoints">所需積分</label>
+                        <input type="number" id="prizePoints" class="form-control" placeholder="輸入所需積分" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="prizeIcon">圖標</label>
+                        <input type="text" id="prizeIcon" class="form-control" placeholder="輸入FontAwesome圖標名稱" value="fa-gift">
+                    </div>
+                    <button class="btn btn-success" id="addPrizeBtn" style="align-self: flex-end;">添加獎品</button>
+                    <button class="btn btn-info" id="exportPrizesBtn" style="align-self: flex-end;">導出獎品</button>
+                </div>
+                
+                <h3>獎品列表</h3>
+                <table class="prizes-table">
+                    <thead>
+                        <tr>
+                            <th>獎品ID</th>
+                            <th>獎品名稱</th>
+                            <th>所需積分</th>
+                            <th>圖標</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prizesTableBody">
+                        <!-- 奖品数据将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="tab-content" id="history-admin-tab">
+                <div class="search-box">
+                    <input type="text" id="searchHistoryUser" class="form-control" placeholder="輸入用戶編號、姓名或QRcode編碼">
+                    <button class="btn" id="searchHistoryBtn">搜索歷史紀錄</button>
+                    <button class="btn btn-secondary" id="clearHistorySearchBtn">清除</button>
+                </div>
+                
+                <div class="data-management">
+                    <button class="btn btn-info" id="exportHistoryBtn">導出歷史紀錄</button>
+                    <button class="btn btn-warning" id="clearHistoryBtn">清空歷史紀錄</button>
+                </div>
+                
+                <h3>積分歷史紀錄</h3>
+                <div id="adminHistoryContent">
+                    <!-- 管理员查看的积分历史将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="system-admin-tab">
+                <div class="admin-controls">
+                    <div class="form-group">
+                        <label for="currentPassword">當前密碼</label>
+                        <input type="password" id="currentPassword" class="form-control" placeholder="輸入當前密碼">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密碼</label>
+                        <input type="password" id="newPassword" class="form-control" placeholder="輸入新密碼">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">確認新密碼</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="再次輸入新密碼">
+                    </div>
+                    <button class="btn btn-warning" id="changePasswordBtn" style="align-self: flex-end;">修改密碼</button>
+                </div>
+                
+                <div class="data-management">
+                    <button class="btn btn-info" id="importDataBtn">導入歷史數據</button>
+                    <button class="btn btn-success" id="exportDataBtn">導出所有數據</button>
+                    <button class="btn btn-danger" id="resetDataBtn">重置所有數據</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dataFile">選擇數據文件 (JSON格式)</label>
+                    <input type="file" id="dataFile" class="form-control" accept=".json">
+                </div>
+                
+                <h3>系统信息</h3>
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="systemUsers">0</div>
+                        <div class="stat-label">用戶數量</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="systemPrizes">0</div>
+                        <div class="stat-label">獎品數量</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="systemHistory">0</div>
+                        <div class="stat-label">歷史紀錄</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="systemAdmins">0</div>
+                        <div class="stat-label">管理員數量</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-block logout-btn" id="adminLogoutBtn">退出登陸</button>
+        </div>
+    </div>
+    
+    <!-- 添加用户模态框 -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加新用戶</h3>
+                <button class="close-btn" id="closeAddUserModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="newUserName">用户姓名</label>
+                <input type="text" id="newUserName" class="form-control" placeholder="請輸入用户姓名">
+            </div>
+            <div class="form-group">
+                <label for="newUserId">用户編號</label>
+                <input type="text" id="newUserId" class="form-control" placeholder="請輸入用户編號">
+            </div>
+            <div class="form-group">
+                <label for="newUserPoints">初始積分</label>
+                <input type="number" id="newUserPoints" class="form-control" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>生成的QRcode編碼: <span id="generatedBarcodeCode">BARCODE001</span></label>
+            </div>
+            <div class="barcode-container" id="newUserBarcode"></div>
+            <button class="btn btn-success btn-block" id="confirmAddUser">確認添加用户</button>
+        </div>
+    </div>
+    
+    <!-- 编辑奖品模态框 -->
+    <div class="modal" id="editPrizeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>編輯獎品</h3>
+                <button class="close-btn" id="closeEditPrizeModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="editPrizeName">獎品名稱</label>
+                <input type="text" id="editPrizeName" class="form-control" placeholder="請輸入獎品名稱">
+            </div>
+            <div class="form-group">
+                <label for="editPrizePoints">所需積分</label>
+                <input type="number" id="editPrizePoints" class="form-control" placeholder="請輸入所需積分" min="1">
+            </div>
+            <div class="form-group">
+                <label for="editPrizeIcon">圖標類名</label>
+                <input type="text" id="editPrizeIcon" class="form-control" placeholder="輸入FontAwesome圖標類名">
+            </div>
+            <input type="hidden" id="editPrizeId">
+            <button class="btn btn-success btn-block" id="confirmEditPrize">确认修改</button>
+        </div>
+    </div>
+    
+    <!-- 条形码扫描模态框 -->
+    <div class="modal" id="barcodeScannerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>掃描QRcode</h3>
+                <button class="close-btn" id="closeScannerModal">&times;</button>
+            </div>
+            <div class="scan-area">
+                <div id="scanner-container">
+                    <!-- 摄像头预览将在这里显示 -->
+                </div>
+                <div class="scan-overlay">
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+            <div class="scan-controls">
+                <button class="btn" id="startScannerBtn">開始掃描</button>
+                <button class="btn btn-danger" id="stopScannerBtn" style="display: none;">停止掃描</button>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>掃描結果: <span id="scanResult">等待掃描...</span></label>
+            </div>
+            <button class="btn btn-success btn-block" id="confirmScanBtn" style="display: none;">確認此QRcode編碼正確？</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // 用户数据存储
+        let users = JSON.parse(localStorage.getItem('barcodePointsUsers')) || [
+            { 
+                id: 'U1001', 
+                name: '张三', 
+                barcodeCode: 'USER001', 
+                points: 1500, 
+                isAdmin: false 
+            },
+            { 
+                id: 'U1002', 
+                name: '李四', 
+                barcodeCode: 'USER002', 
+                points: 800, 
+                isAdmin: false 
+            },
+            { 
+                id: 'U1003', 
+                name: '王五', 
+                barcodeCode: 'USER003', 
+                points: 2200, 
+                isAdmin: false 
+            },
+            { 
+                id: 'ADMIN001', 
+                name: '系统管理员', 
+                barcodeCode: 'ADMIN001', 
+                points: 0, 
+                isAdmin: true 
+            }
+        ];
+        
+        // 奖品数据存储
+        let prizes = JSON.parse(localStorage.getItem('barcodePointsPrizes')) || [
+            { id: 'P001', name: '咖啡券', points: 200, icon: 'fa-mug-hot' },
+            { id: 'P002', name: '电影票', points: 500, icon: 'fa-film' },
+            { id: 'P003', name: '蓝牙耳机', points: 1500, icon: 'fa-headphones' },
+            { id: 'P004', name: '智能手表', points: 3000, icon: 'fa-clock' },
+            { id: 'P005', name: '平板电脑', points: 5000, icon: 'fa-tablet-alt' },
+            { id: 'P006', name: '购物卡', points: 1000, icon: 'fa-shopping-bag' }
+        ];
+        
+        // 积分历史记录存储
+        let pointsHistory = JSON.parse(localStorage.getItem('barcodePointsHistory')) || [
+            { userId: 'U1001', timestamp: new Date('2023-10-01 09:30:00').getTime(), pointsChange: 100, reason: '签到奖励' },
+            { userId: 'U1001', timestamp: new Date('2023-10-05 14:20:00').getTime(), pointsChange: -200, reason: '兑换咖啡券' },
+            { userId: 'U1001', timestamp: new Date('2023-10-10 11:15:00').getTime(), pointsChange: 500, reason: '活动奖励' },
+            { userId: 'U1002', timestamp: new Date('2023-10-02 10:45:00').getTime(), pointsChange: 100, reason: '签到奖励' },
+            { userId: 'U1002', timestamp: new Date('2023-10-07 16:30:00').getTime(), pointsChange: 300, reason: '完成任务' },
+            { userId: 'U1003', timestamp: new Date('2023-10-03 08:20:00').getTime(), pointsChange: 100, reason: '签到奖励' },
+            { userId: 'U1003', timestamp: new Date('2023-10-08 13:10:00').getTime(), pointsChange: 1000, reason: '推荐用户奖励' },
+            { userId: 'U1001', timestamp: new Date('2023-10-15 15:40:00').getTime(), pointsChange: 800, reason: '管理员调整' },
+            { userId: 'U1003', timestamp: new Date('2023-10-12 17:25:00').getTime(), pointsChange: 400, reason: '活动奖励' }
+        ];
+        
+        // *****
+        const adminPassword = 'admin123';
+        
+        // DOM元素
+        const loginSection = document.getElementById('loginSection');
+        const userDashboard = document.getElementById('userDashboard');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const userBarcodeScan = document.getElementById('userBarcodeScan');
+        const adminBarcodeScan = document.getElementById('adminBarcodeScan');
+        const userLoginBtn = document.getElementById('userLoginBtn');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const userLogoutBtn = document.getElementById('userLogoutBtn');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const prizesGrid = document.getElementById('prizesGrid');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const prizesTableBody = document.getElementById('prizesTableBody');
+        const updatePointsBtn = document.getElementById('updatePointsBtn');
+        const addUserBtn = document.getElementById('addUserBtn');
+        const addUserModal = document.getElementById('addUserModal');
+        const closeAddUserModal = document.getElementById('closeAddUserModal');
+        const confirmAddUser = document.getElementById('confirmAddUser');
+        const generatedBarcodeCode = document.getElementById('generatedBarcodeCode');
+        const newUserBarcode = document.getElementById('newUserBarcode');
+        const addPrizeBtn = document.getElementById('addPrizeBtn');
+        const editPrizeModal = document.getElementById('editPrizeModal');
+        const closeEditPrizeModal = document.getElementById('closeEditPrizeModal');
+        const confirmEditPrize = document.getElementById('confirmEditPrize');
+        const searchHistoryBtn = document.getElementById('searchHistoryBtn');
+        const barcodeScannerModal = document.getElementById('barcodeScannerModal');
+        const closeScannerModal = document.getElementById('closeScannerModal');
+        const startScannerBtn = document.getElementById('startScannerBtn');
+        const stopScannerBtn = document.getElementById('stopScannerBtn');
+        const scanResult = document.getElementById('scanResult');
+        const confirmScanBtn = document.getElementById('confirmScanBtn');
+        const userIdInput = document.getElementById('userIdInput');
+        const userBarcodeDisplay = document.getElementById('userBarcodeDisplay');
+        const notification = document.getElementById('notification');
+        
+        // 登录选项切换
+        const userCodeLoginBtn = document.getElementById('userCodeLoginBtn');
+        const userBarcodeLoginBtn = document.getElementById('userBarcodeLoginBtn');
+        const userCodeLoginForm = document.getElementById('userCodeLoginForm');
+        const userBarcodeLoginForm = document.getElementById('userBarcodeLoginForm');
+        
+        const adminCodeLoginBtn = document.getElementById('adminCodeLoginBtn');
+        const adminBarcodeLoginBtn = document.getElementById('adminBarcodeLoginBtn');
+        const adminCodeLoginForm = document.getElementById('adminCodeLoginForm');
+        const adminBarcodeLoginForm = document.getElementById('adminBarcodeLoginForm');
+        
+        // 新增功能元素
+        const searchUserBtn = document.getElementById('searchUserBtn');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const exportUsersBtn = document.getElementById('exportUsersBtn');
+        const exportPrizesBtn = document.getElementById('exportPrizesBtn');
+        const exportHistoryBtn = document.getElementById('exportHistoryBtn');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const clearHistorySearchBtn = document.getElementById('clearHistorySearchBtn');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const importDataBtn = document.getElementById('importDataBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const resetDataBtn = document.getElementById('resetDataBtn');
+        const dataFile = document.getElementById('dataFile');
+        const pointsReason = document.getElementById('pointsReason');
+        const customReason = document.getElementById('customReason');
+        
+        // 当前登录的用户和管理员
+        let currentUser = null;
+        let currentAdmin = false;
+        let scannerActive = false;
+        let scannedBarcode = '';
+        let scannerType = '';
+        
+        // 修复条形码生成函数
+        function generateBarcode(code, container) {
+            container.innerHTML = '';
+            
+            if (!code || code.trim() === '') {
+                container.innerHTML = '<div class="barcode-placeholder">条形码编码为空</div>';
+                return;
+            }
+            
+            try {
+                // 创建canvas元素
+                const canvas = document.createElement('canvas');
+                container.appendChild(canvas);
+                
+                // 使用JsBarcode生成条形码
+                JsBarcode(canvas, code, {
+                    format: "CODE128",
+                    width: 2,
+                    height: 100,
+                    displayValue: true,
+                    fontOptions: "bold",
+                    fontSize: 16,
+                    textMargin: 10,
+                    margin: 10,
+                    background: "#ffffff",
+                    lineColor: "#000000"
+                });
+                
+                console.log('QRcode生成成功:', code);
+            } catch (error) {
+                console.error('QRcode生成失敗:', error);
+                container.innerHTML = '<div class="barcode-placeholder">QRcode生成失敗: ' + error.message + '</div>';
+            }
+        }
+
+        // 初始化页面
+        function initPage() {
+            // 保存初始数据到localStorage
+            saveDataToStorage();
+            
+            renderPrizes();
+            renderUsersTable();
+            renderPrizesTable();
+            setupTabs();
+            setupLoginOptions();
+            updateSystemStats();
+            
+            // 积分变更原因选择事件
+            pointsReason.addEventListener('change', function() {
+                if (this.value === '其他') {
+                    customReason.style.display = 'block';
+                } else {
+                    customReason.style.display = 'none';
+                    customReason.value = '';
+                }
+            });
+            
+            // 用户登录按钮事件
+            userLoginBtn.addEventListener('click', function() {
+                const userId = userIdInput.value;
+                if (userId) {
+                    loginWithUserId(userId);
+                } else {
+                    showNotification('請輸入用戶編號', 'error');
+                }
+            });
+            
+            // 用户条形码扫描事件
+            userBarcodeScan.addEventListener('click', function() {
+                openBarcodeScanner('user');
+            });
+            
+            // 管理员条形码扫描事件
+            adminBarcodeScan.addEventListener('click', function() {
+                openBarcodeScanner('admin');
+            });
+            
+            // 管理员登录按钮事件
+            adminLoginBtn.addEventListener('click', function() {
+                const adminId = document.getElementById('adminId').value;
+                const password = document.getElementById('adminPassword').value;
+                
+                if (adminId && password) {
+                    loginAdminWithCredentials(adminId, password);
+                } else {
+                    showNotification('請輸入管理員編號和密碼', 'error');
+                }
+            });
+            
+            // 用户退出登录
+            userLogoutBtn.addEventListener('click', function() {
+                currentUser = null;
+                showLoginSection();
+                showNotification('已登出用戶登錄', 'info');
+            });
+            
+            // 管理员退出登录
+            adminLogoutBtn.addEventListener('click', function() {
+                // 询问是否要下载备份
+                if (confirm('是否要下載最新的系統文件？')) {
+                    exportAllData();
+                }
+                currentAdmin = false;
+                document.getElementById('adminId').value = '';
+                document.getElementById('adminPassword').value = '';
+                showLoginSection();
+                showNotification('已登出管理員登陸', 'info');
+            });
+            
+            // 更新积分按钮事件
+            updatePointsBtn.addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchUser').value;
+                const pointsChange = parseInt(document.getElementById('pointsChange').value);
+                let reason = pointsReason.value;
+                
+                if (reason === '其他') {
+                    reason = customReason.value;
+                }
+                
+                if (!searchTerm || isNaN(pointsChange)) {
+                    showNotification('請輸入有效的變更值和用戶編號', 'error');
+                    return;
+                }
+                
+                if (!reason) {
+                    showNotification('請選擇或輸入變更原因', 'error');
+                    return;
+                }
+                
+                const user = users.find(u => 
+                    u.id === searchTerm || 
+                    u.name === searchTerm || 
+                    u.barcodeCode === searchTerm
+                );
+                
+                if (user) {
+                    user.points += pointsChange;
+                    if (user.points < 0) user.points = 0;
+                    
+                    // 记录积分变更历史
+                    pointsHistory.push({
+                        userId: user.id,
+                        timestamp: new Date().getTime(),
+                        pointsChange: pointsChange,
+                        reason: reason
+                    });
+                    
+                    // 保存数据
+                    saveDataToStorage();
+                    
+                    renderUsersTable();
+                    updateSystemStats();
+                    document.getElementById('pointsChange').value = '';
+                    pointsReason.value = '';
+                    customReason.value = '';
+                    customReason.style.display = 'none';
+                    
+                    showNotification(`成功更新 ${user.name} 的積分！`, 'success');
+                } else {
+                    showNotification('未找到該用戶', 'error');
+                }
+            });
+            
+            // 添加用户按钮事件
+            addUserBtn.addEventListener('click', function() {
+                // 生成随机条形码编码
+                const newBarcodeCode = generateBarcodeCode();
+                generatedBarcodeCode.textContent = newBarcodeCode;
+                
+                // 生成条形码 - 添加延迟确保DOM更新
+                setTimeout(() => {
+                    generateBarcode(newBarcodeCode, newUserBarcode);
+                }, 100);
+                
+                // 显示模态框
+                addUserModal.style.display = 'flex';
+            });
+            
+            // 关闭添加用户模态框
+            closeAddUserModal.addEventListener('click', function() {
+                addUserModal.style.display = 'none';
+            });
+            
+            // 确认添加用户
+            confirmAddUser.addEventListener('click', function() {
+                const userName = document.getElementById('newUserName').value;
+                const userId = document.getElementById('newUserId').value;
+                const userPoints = parseInt(document.getElementById('newUserPoints').value) || 0;
+                const barcodeCode = generatedBarcodeCode.textContent;
+                
+                if (!userName || !userId) {
+                    showNotification('請輸入用戶姓名或編號', 'error');
+                    return;
+                }
+                
+                // 检查用户编号是否已存在
+                if (users.find(u => u.id === userId)) {
+                    showNotification('用戶編號已存在，請使用其他編號', 'error');
+                    return;
+                }
+                
+                // 添加新用户
+                users.push({
+                    id: userId,
+                    name: userName,
+                    barcodeCode: barcodeCode,
+                    points: userPoints,
+                    isAdmin: false
+                });
+                
+                // 记录初始积分历史
+                if (userPoints > 0) {
+                    pointsHistory.push({
+                        userId: userId,
+                        timestamp: new Date().getTime(),
+                        pointsChange: userPoints,
+                        reason: '初始積分'
+                    });
+                }
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                // 更新界面
+                renderUsersTable();
+                updateSystemStats();
+                
+                // 关闭模态框并重置表单
+                addUserModal.style.display = 'none';
+                document.getElementById('newUserName').value = '';
+                document.getElementById('newUserId').value = '';
+                document.getElementById('newUserPoints').value = '0';
+                
+                showNotification(`成功添加用户 ${userName}，条形码编码: ${barcodeCode}`, 'success');
+            });
+            
+            // 添加奖品按钮事件
+            addPrizeBtn.addEventListener('click', function() {
+                const prizeName = document.getElementById('prizeName').value;
+                const prizePoints = parseInt(document.getElementById('prizePoints').value);
+                const prizeIcon = document.getElementById('prizeIcon').value;
+                
+                if (!prizeName || isNaN(prizePoints) || prizePoints < 1) {
+                    showNotification('請輸入有效的獎品信息', 'error');
+                    return;
+                }
+                
+                // 生成奖品ID
+                const prizeId = generatePrizeId();
+                
+                // 添加新奖品
+                prizes.push({
+                    id: prizeId,
+                    name: prizeName,
+                    points: prizePoints,
+                    icon: prizeIcon
+                });
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                // 更新界面
+                renderPrizesTable();
+                renderPrizes();
+                updateSystemStats();
+                
+                // 重置表单
+                document.getElementById('prizeName').value = '';
+                document.getElementById('prizePoints').value = '';
+                document.getElementById('prizeIcon').value = 'fa-gift';
+                
+                showNotification(`成功添加獎品 ${prizeName}`, 'success');
+            });
+            
+            // 关闭编辑奖品模态框
+            closeEditPrizeModal.addEventListener('click', function() {
+                editPrizeModal.style.display = 'none';
+            });
+            
+            // 确认编辑奖品
+            confirmEditPrize.addEventListener('click', function() {
+                const prizeId = document.getElementById('editPrizeId').value;
+                const prizeName = document.getElementById('editPrizeName').value;
+                const prizePoints = parseInt(document.getElementById('editPrizePoints').value);
+                const prizeIcon = document.getElementById('editPrizeIcon').value;
+                
+                if (!prizeName || isNaN(prizePoints) || prizePoints < 1) {
+                    showNotification('請輸入有效的奖品信息', 'error');
+                    return;
+                }
+                
+                // 更新奖品信息
+                const prize = prizes.find(p => p.id === prizeId);
+                if (prize) {
+                    prize.name = prizeName;
+                    prize.points = prizePoints;
+                    prize.icon = prizeIcon;
+                    
+                    // 保存数据
+                    saveDataToStorage();
+                    
+                    // 更新界面
+                    renderPrizesTable();
+                    renderPrizes();
+                    
+                    // 关闭模态框
+                    editPrizeModal.style.display = 'none';
+                    
+                    showNotification(`成功更新獎品 ${prizeName}`, 'success');
+                }
+            });
+            
+            // 搜索历史记录按钮事件
+            searchHistoryBtn.addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchHistoryUser').value;
+                renderAdminHistory(searchTerm);
+            });
+            
+            // 条形码扫描模态框事件
+            closeScannerModal.addEventListener('click', function() {
+                closeBarcodeScanner();
+            });
+            
+            startScannerBtn.addEventListener('click', function() {
+                startBarcodeScanner();
+            });
+            
+            stopScannerBtn.addEventListener('click', function() {
+                stopBarcodeScanner();
+            });
+            
+            confirmScanBtn.addEventListener('click', function() {
+                if (scannedBarcode) {
+                    if (scannerType === 'user') {
+                        loginWithBarcode(scannedBarcode);
+                    } else if (scannerType === 'admin') {
+                        loginAdminWithBarcode(scannedBarcode);
+                    }
+                    closeBarcodeScanner();
+                }
+            });
+            
+            // 新增功能事件
+            searchUserBtn.addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchUser').value;
+                renderUsersTable(searchTerm);
+            });
+            
+            clearSearchBtn.addEventListener('click', function() {
+                document.getElementById('searchUser').value = '';
+                renderUsersTable();
+            });
+            
+            exportUsersBtn.addEventListener('click', function() {
+                exportUsersData();
+            });
+            
+            exportPrizesBtn.addEventListener('click', function() {
+                exportPrizesData();
+            });
+            
+            exportHistoryBtn.addEventListener('click', function() {
+                exportHistoryData();
+            });
+            
+            clearHistoryBtn.addEventListener('click', function() {
+                if (confirm('确定要清空所有積分歷史紀錄吗？此操作不可恢復！')) {
+                    pointsHistory = [];
+                    saveDataToStorage();
+                    renderAdminHistory();
+                    updateSystemStats();
+                    showNotification('歷史紀錄已清空', 'success');
+                }
+            });
+            
+            clearHistorySearchBtn.addEventListener('click', function() {
+                document.getElementById('searchHistoryUser').value = '';
+                renderAdminHistory();
+            });
+            
+            changePasswordBtn.addEventListener('click', function() {
+                changeAdminPassword();
+            });
+            
+            importDataBtn.addEventListener('click', function() {
+                dataFile.click();
+            });
+            
+            exportDataBtn.addEventListener('click', function() {
+                exportAllData();
+            });
+            
+            resetDataBtn.addEventListener('click', function() {
+                resetSystemData();
+            });
+            
+            dataFile.addEventListener('change', function(e) {
+                importData(e);
+            });
+        }
+        
+        // 设置登录选项切换
+        function setupLoginOptions() {
+            // 用户登录选项
+            userCodeLoginBtn.addEventListener('click', function() {
+                userCodeLoginBtn.classList.add('active');
+                userBarcodeLoginBtn.classList.remove('active');
+                userCodeLoginForm.style.display = 'block';
+                userBarcodeLoginForm.style.display = 'none';
+            });
+            
+            userBarcodeLoginBtn.addEventListener('click', function() {
+                userBarcodeLoginBtn.classList.add('active');
+                userCodeLoginBtn.classList.remove('active');
+                userCodeLoginForm.style.display = 'none';
+                userBarcodeLoginForm.style.display = 'block';
+            });
+            
+            // 管理员登录选项
+            adminCodeLoginBtn.addEventListener('click', function() {
+                adminCodeLoginBtn.classList.add('active');
+                adminBarcodeLoginBtn.classList.remove('active');
+                adminCodeLoginForm.style.display = 'block';
+                adminBarcodeLoginForm.style.display = 'none';
+            });
+            
+            adminBarcodeLoginBtn.addEventListener('click', function() {
+                adminBarcodeLoginBtn.classList.add('active');
+                adminCodeLoginBtn.classList.remove('active');
+                adminCodeLoginForm.style.display = 'none';
+                adminBarcodeLoginForm.style.display = 'block';
+            });
+        }
+        
+        // 设置选项卡切换
+        function setupTabs() {
+            // 用户界面选项卡
+            const userTabs = document.querySelectorAll('#userDashboard .tab');
+            userTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有active类
+                    userTabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('#userDashboard .tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // 添加active类到当前选项卡
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // 如果切换到历史记录选项卡，渲染历史记录
+                    if (tabId === 'history') {
+                        renderUserHistory();
+                    }
+                });
+            });
+            
+            // 管理员界面选项卡
+            const adminTabs = document.querySelectorAll('#adminDashboard .tab');
+            adminTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有active类
+                    adminTabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('#adminDashboard .tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // 添加active类到当前选项卡
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // 如果切换到历史记录选项卡，渲染历史记录
+                    if (tabId === 'history-admin') {
+                        renderAdminHistory();
+                    } else if (tabId === 'system-admin') {
+                        updateSystemStats();
+                    }
+                });
+            });
+        }
+        
+        // 使用用户编号登录
+        function loginWithUserId(userId) {
+            const user = users.find(u => u.id === userId && !u.isAdmin);
+            if (user) {
+                currentUser = user;
+                showUserDashboard();
+                showNotification(`用户 ${user.name} 登錄成功！`, 'success');
+            } else {
+                showNotification('用户編號錯誤或不是普通用户', 'error');
+            }
+        }
+        
+        // 使用条形码登录
+        function loginWithBarcode(barcode) {
+            const user = users.find(u => u.barcodeCode === barcode && !u.isAdmin);
+            if (user) {
+                currentUser = user;
+                showUserDashboard();
+                showNotification(`用户 ${user.name} 登錄成功！`, 'success');
+            } else {
+                showNotification('QRcode錯誤或不是普通用户', 'error');
+            }
+        }
+        
+        // 使用管理员凭据登录
+        function loginAdminWithCredentials(adminId, password) {
+            if (password === adminPassword) {
+                const adminUser = users.find(u => u.id === adminId && u.isAdmin);
+                if (adminUser) {
+                    currentAdmin = true;
+                    showAdminDashboard();
+                    showNotification('管理員登陸成功！', 'success');
+                } else {
+                    showNotification('管理員編號錯誤！', 'error');
+                }
+            } else {
+                showNotification('密碼錯誤，請重試！', 'error');
+            }
+        }
+        
+        // 使用管理员条形码登录
+        function loginAdminWithBarcode(barcode) {
+            const adminUser = users.find(u => u.barcodeCode === barcode && u.isAdmin);
+            if (adminUser) {
+                currentAdmin = true;
+                showAdminDashboard();
+                showNotification('管理員登錄成功！', 'success');
+            } else {
+                showNotification('管理員QRcode錯誤！', 'error');
+            }
+        }
+        
+        // 打开条形码扫描器
+        function openBarcodeScanner(type) {
+            scannerType = type;
+            barcodeScannerModal.style.display = 'flex';
+            scanResult.textContent = '等待掃描...';
+            confirmScanBtn.style.display = 'none';
+            scannedBarcode = '';
+        }
+        
+        // 关闭条形码扫描器
+        function closeBarcodeScanner() {
+            barcodeScannerModal.style.display = 'none';
+            stopBarcodeScanner();
+        }
+        
+        // 开始条形码扫描
+        function startBarcodeScanner() {
+            if (scannerActive) return;
+            
+            const scannerContainer = document.getElementById('scanner-container');
+            scannerContainer.innerHTML = '';
+            
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: scannerContainer,
+                    constraints: {
+                        width: 480,
+                        height: 320,
+                        facingMode: "environment" // 使用后置攝像頭
+                    }
+                },
+                decoder: {
+                    readers: ["code_128_reader", "ean_reader", "upc_reader"]
+                }
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                    showNotification('無法啟動攝像頭: ' + err, 'error');
+                    return;
+                }
+                Quagga.start();
+                scannerActive = true;
+                startScannerBtn.style.display = 'none';
+                stopScannerBtn.style.display = 'inline-block';
+            });
+            
+            Quagga.onDetected(function(result) {
+                if (result && result.codeResult) {
+                    scannedBarcode = result.codeResult.code;
+                    scanResult.textContent = scannedBarcode;
+                    confirmScanBtn.style.display = 'block';
+                    showNotification('監測到QRcode: ' + scannedBarcode, 'success');
+                    
+                    // 自动停止扫描
+                    stopBarcodeScanner();
+                }
+            });
+        }
+        
+        // 停止条形码扫描
+        function stopBarcodeScanner() {
+            if (scannerActive) {
+                Quagga.stop();
+                scannerActive = false;
+                startScannerBtn.style.display = 'inline-block';
+                stopScannerBtn.style.display = 'none';
+            }
+        }
+        
+        // 显示登录区域
+        function showLoginSection() {
+            loginSection.style.display = 'flex';
+            userDashboard.style.display = 'none';
+            adminDashboard.style.display = 'none';
+            userIdInput.value = '';
+        }
+        
+        // 显示用户仪表盘
+        function showUserDashboard() {
+            loginSection.style.display = 'none';
+            userDashboard.style.display = 'block';
+            adminDashboard.style.display = 'none';
+            
+            // 更新用户信息
+            document.getElementById('dashboardUserName').textContent = currentUser.name;
+            document.getElementById('dashboardUserId').textContent = currentUser.id;
+            document.getElementById('dashboardUserBarcode').textContent = currentUser.barcodeCode;
+            document.getElementById('dashboardUserPoints').textContent = currentUser.points;
+            
+            // 生成用户条形码 - 添加延迟
+            setTimeout(() => {
+                generateBarcode(currentUser.barcodeCode, userBarcodeDisplay);
+            }, 100);
+            
+            // 重新渲染奖品列表
+            renderPrizes();
+        }
+        
+        // 显示管理员仪表盘
+        function showAdminDashboard() {
+            loginSection.style.display = 'none';
+            userDashboard.style.display = 'none';
+            adminDashboard.style.display = 'block';
+        }
+        
+        // 渲染奖品列表（用户界面）
+        function renderPrizes() {
+            prizesGrid.innerHTML = '';
+            
+            prizes.forEach(prize => {
+                const prizeCard = document.createElement('div');
+                prizeCard.className = 'prize-card';
+                
+                const canAfford = currentUser && currentUser.points >= prize.points;
+                
+                prizeCard.innerHTML = `
+                    <div class="prize-image">
+                        <i class="fas ${prize.icon}"></i>
+                    </div>
+                    <div class="prize-name">${prize.name}</div>
+                    <div class="prize-points">${prize.points} 积分</div>
+                    <button class="btn ${canAfford ? '' : 'disabled'}" 
+                            ${canAfford ? '' : 'disabled'}
+                            onclick="redeemPrize('${prize.id}')">
+                        ${canAfford ? '立即兌換' : '積分不足'}
+                    </button>
+                `;
+                
+                prizesGrid.appendChild(prizeCard);
+            });
+        }
+        
+        // 兑换奖品
+        function redeemPrize(prizeId) {
+            const prize = prizes.find(p => p.id === prizeId);
+            
+            if (currentUser.points >= prize.points) {
+                currentUser.points -= prize.points;
+                
+                // 记录积分变更历史
+                pointsHistory.push({
+                    userId: currentUser.id,
+                    timestamp: new Date().getTime(),
+                    pointsChange: -prize.points,
+                    reason: `兌換獎品：${prize.name}`
+                });
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                document.getElementById('dashboardUserPoints').textContent = currentUser.points;
+                renderPrizes();
+                showNotification(`成功兑换 ${prize.name}！`, 'success');
+            } else {
+                showNotification('積分不足，无法兑换該獎品', 'error');
+            }
+        }
+        
+        // 渲染用户表格
+        function renderUsersTable(searchTerm = '') {
+            usersTableBody.innerHTML = '';
+            
+            let filteredUsers = users;
+            
+            if (searchTerm) {
+                filteredUsers = users.filter(user => 
+                    user.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    user.barcodeCode.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            filteredUsers.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.barcodeCode}</td>
+                    <td>${user.points}</td>
+                    <td>${user.isAdmin ? '管理員' : '普通用戶'}</td>
+                    <td>
+                        <button class="action-btn" style="background: #3498db;" onclick="selectUser('${user.id}')">选择</button>
+                        ${!user.isAdmin ? 
+                            `<button class="action-btn" style="background: #f39c12;" onclick="promoteUser('${user.id}')">升级为管理員</button>` : 
+                            ''
+                        }
+                        <button class="action-btn" style="background: #e74c3c;" onclick="deleteUser('${user.id}')">移除人員</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+            
+            updateUserStats();
+        }
+        
+        // 渲染奖品表格（管理员界面）
+        function renderPrizesTable() {
+            prizesTableBody.innerHTML = '';
+            
+            prizes.forEach(prize => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${prize.id}</td>
+                    <td>${prize.name}</td>
+                    <td>${prize.points}</td>
+                    <td><i class="fas ${prize.icon}"></i> ${prize.icon}</td>
+                    <td>
+                        <button class="action-btn" style="background: #3498db;" onclick="editPrize('${prize.id}')">编辑</button>
+                        <button class="action-btn" style="background: #e74c3c;" onclick="deletePrize('${prize.id}')">移除人員</button>
+                    </td>
+                `;
+                
+                prizesTableBody.appendChild(row);
+            });
+        }
+        
+        // 渲染用户积分历史
+        function renderUserHistory() {
+            const userHistoryContent = document.getElementById('userHistoryContent');
+            userHistoryContent.innerHTML = '';
+            
+            // 获取当前用户的历史记录
+            const userHistory = pointsHistory
+                .filter(record => record.userId === currentUser.id)
+                .sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (userHistory.length === 0) {
+                userHistoryContent.innerHTML = '<p>暂無積分歷史紀錄</p>';
+                return;
+            }
+            
+            userHistory.forEach(record => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const pointsClass = record.pointsChange >= 0 ? 'points-positive' : 'points-negative';
+                const pointsPrefix = record.pointsChange >= 0 ? '+' : '';
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <div>${record.reason}</div>
+                        <div class="small">${formatDate(record.timestamp)}</div>
+                    </div>
+                    <div class="history-points ${pointsClass}">${pointsPrefix}${record.pointsChange}</div>
+                `;
+                
+                userHistoryContent.appendChild(historyItem);
+            });
+        }
+        
+        // 渲染管理员查看的积分历史
+        function renderAdminHistory(searchTerm = '') {
+            const adminHistoryContent = document.getElementById('adminHistoryContent');
+            adminHistoryContent.innerHTML = '';
+            
+            let filteredHistory = pointsHistory;
+            
+            // 如果提供了搜索条件，过滤历史记录
+            if (searchTerm) {
+                // 查找匹配的用户
+                const matchedUsers = users.filter(u => 
+                    u.id.includes(searchTerm) || 
+                    u.name.includes(searchTerm) || 
+                    u.barcodeCode.includes(searchTerm)
+                );
+                
+                const matchedUserIds = matchedUsers.map(u => u.id);
+                filteredHistory = pointsHistory.filter(record => 
+                    matchedUserIds.includes(record.userId)
+                );
+            }
+            
+            // 按时间排序
+            filteredHistory.sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (filteredHistory.length === 0) {
+                adminHistoryContent.innerHTML = '<p>暂無積分歷史紀錄</p>';
+                return;
+            }
+            
+            filteredHistory.forEach(record => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const user = users.find(u => u.id === record.userId);
+                const pointsClass = record.pointsChange >= 0 ? 'points-positive' : 'points-negative';
+                const pointsPrefix = record.pointsChange >= 0 ? '+' : '';
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <div><strong>${user ? user.name : '未知用户'} (${record.userId})</strong></div>
+                        <div>${record.reason}</div>
+                        <div class="small">${formatDate(record.timestamp)}</div>
+                    </div>
+                    <div class="history-points ${pointsClass}">${pointsPrefix}${record.pointsChange}</div>
+                `;
+                
+                adminHistoryContent.appendChild(historyItem);
+            });
+        }
+        
+        // 选择用户
+        function selectUser(userId) {
+            const user = users.find(u => u.id === userId);
+            document.getElementById('searchUser').value = user.id;
+        }
+        
+        // 升级用户为管理员
+        function promoteUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.isAdmin = true;
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                renderUsersTable();
+                updateSystemStats();
+                showNotification(`已将 ${user.name} 升級為管理員`, 'success');
+            }
+        }
+        
+        // 删除用户
+        function deleteUser(userId) {
+            if (confirm('确定要删除这个用户吗？此操作不可撤銷。')) {
+                users = users.filter(u => u.id !== userId);
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                renderUsersTable();
+                updateSystemStats();
+                showNotification('用户已删除', 'success');
+            }
+        }
+        
+        // 编辑奖品
+        function editPrize(prizeId) {
+            const prize = prizes.find(p => p.id === prizeId);
+            if (prize) {
+                document.getElementById('editPrizeId').value = prize.id;
+                document.getElementById('editPrizeName').value = prize.name;
+                document.getElementById('editPrizePoints').value = prize.points;
+                document.getElementById('editPrizeIcon').value = prize.icon;
+                
+                editPrizeModal.style.display = 'flex';
+            }
+        }
+        
+        // 删除奖品
+        function deletePrize(prizeId) {
+            if (confirm('确定要删除这个獎品吗？此操作不可撤銷。')) {
+                prizes = prizes.filter(p => p.id !== prizeId);
+                
+                // 保存数据
+                saveDataToStorage();
+                
+                renderPrizesTable();
+                renderPrizes();
+                updateSystemStats();
+                showNotification('獎品已删除', 'success');
+            }
+        }
+        
+        // 更新用户统计信息
+        function updateUserStats() {
+            const totalUsers = users.filter(u => !u.isAdmin).length;
+            const totalPoints = users.filter(u => !u.isAdmin).reduce((sum, user) => sum + user.points, 0);
+            const avgPoints = totalUsers > 0 ? Math.round(totalPoints / totalUsers) : 0;
+            const activeUsers = users.filter(u => !u.isAdmin && u.points > 0).length;
+            
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalPoints').textContent = totalPoints;
+            document.getElementById('avgPoints').textContent = avgPoints;
+            document.getElementById('activeUsers').textContent = activeUsers;
+        }
+        
+        // 更新系统统计信息
+        function updateSystemStats() {
+            document.getElementById('systemUsers').textContent = users.filter(u => !u.isAdmin).length;
+            document.getElementById('systemPrizes').textContent = prizes.length;
+            document.getElementById('systemHistory').textContent = pointsHistory.length;
+            document.getElementById('systemAdmins').textContent = users.filter(u => u.isAdmin).length;
+            
+            updateUserStats();
+        }
+        
+        // 导出用户数据
+        function exportUsersData() {
+            const dataStr = JSON.stringify(users.filter(u => !u.isAdmin), null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'users_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('用户數據導出成功', 'success');
+        }
+        
+        // 导出奖品数据
+        function exportPrizesData() {
+            const dataStr = JSON.stringify(prizes, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'prizes_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('獎品數據導出成功', 'success');
+        }
+        
+        // 导出历史数据
+        function exportHistoryData() {
+            const dataStr = JSON.stringify(pointsHistory, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'history_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('歷史數據導出成功', 'success');
+        }
+        
+        // 导出所有数据
+        function exportAllData() {
+            const allData = {
+                users: users,
+                prizes: prizes,
+                history: pointsHistory,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'barcode_system_backup.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('系統數據備份成功', 'success');
+        }
+        
+        // 导入数据
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (importedData.users && Array.isArray(importedData.users)) {
+                        users = importedData.users;
+                    }
+                    
+                    if (importedData.prizes && Array.isArray(importedData.prizes)) {
+                        prizes = importedData.prizes;
+                    }
+                    
+                    if (importedData.history && Array.isArray(importedData.history)) {
+                        pointsHistory = importedData.history;
+                    }
+                    
+                    saveDataToStorage();
+                    renderUsersTable();
+                    renderPrizesTable();
+                    renderPrizes();
+                    updateSystemStats();
+                    
+                    showNotification('數據導入成功', 'success');
+                } catch (error) {
+                    showNotification('數據導入失败：文件格式錯誤', 'error');
+                    console.error('Import error:', error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // 重置文件输入
+            event.target.value = '';
+        }
+        
+        // 修改管理员密码
+        function changeAdminPassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showNotification('請填寫所有密碼字段', 'error');
+                return;
+            }
+            
+            if (currentPassword !== adminPassword) {
+                showNotification('當前密碼錯誤', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showNotification('新密碼和确认密碼不匹配', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showNotification('新密码长度至少6位', 'error');
+                return;
+            }
+            
+            // 在实际应用中，这里应该将新密码保存到安全的地方
+            // 由于这是前端演示，我们无法真正修改硬编码的密码
+            // 但可以保存到localStorage作为演示
+            localStorage.setItem('adminNewPassword', newPassword);
+            
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            showNotification('密码修改需到代碼層尋找*****', 'success');
+        }
+        
+        // 重置系统数据
+        function resetSystemData() {
+            if (confirm('确定要重置所有系統數據吗？此操作将删除所有用户、獎品和歷史紀錄，且不可恢复！')) {
+                users = [
+                    { 
+                        id: 'ADMIN001', 
+                        name: '系统管理員', 
+                        barcodeCode: 'ADMIN001', 
+                        points: 0, 
+                        isAdmin: true 
+                    }
+                ];
+                prizes = [];
+                pointsHistory = [];
+                
+                saveDataToStorage();
+                renderUsersTable();
+                renderPrizesTable();
+                renderPrizes();
+                updateSystemStats();
+                
+                showNotification('系統數據已重置', 'success');
+            }
+        }
+        
+        // 生成随机用户ID
+        function generateUserId() {
+            const prefix = 'U';
+            const timestamp = new Date().getTime().toString().slice(-4);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `${prefix}${timestamp}${random}`;
+        }
+        
+        // 生成随机条形码编码
+        function generateBarcodeCode() {
+            const prefix = 'USER';
+            const timestamp = new Date().getTime().toString().slice(-6);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `${prefix}${timestamp}${random}`;
+        }
+        
+        // 生成随机奖品ID
+        function generatePrizeId() {
+            const prefix = 'P';
+            const timestamp = new Date().getTime().toString().slice(-4);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `${prefix}${timestamp}${random}`;
+        }
+        
+        // 格式化日期
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        // 保存数据到本地存储
+        function saveDataToStorage() {
+            localStorage.setItem('barcodePointsUsers', JSON.stringify(users));
+            localStorage.setItem('barcodePointsPrizes', JSON.stringify(prizes));
+            localStorage.setItem('barcodePointsHistory', JSON.stringify(pointsHistory));
+        }
+        
+        // 显示通知
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            if (type === 'success') {
+                notification.style.background = '#2ecc71';
+            } else if (type === 'error') {
+                notification.style.background = '#e74c3c';
+            } else {
+                notification.style.background = '#3498db';
+            }
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 确保JsBarcode库已加载
+        function checkBarcodeLibrary() {
+            if (typeof JsBarcode === 'undefined') {
+                console.error('JsBarcode库未正确加载');
+                // 尝试重新加载
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js';
+                script.onload = function() {
+                    console.log('JsBarcode库重新加载成功');
+                    initPage();
+                };
+                document.head.appendChild(script);
+            } else {
+                console.log('JsBarcode库已加载');
+                initPage();
+            }
+        }
+
+        // 在页面加载时检查
+        window.addEventListener('load', function() {
+            checkBarcodeLibrary();
+        });
+    </script>
+</body>
+</html>
