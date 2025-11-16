@@ -18,7 +18,7 @@ cmos.dormitory turns daily dorm activities (cleaning, duty shifts, participation
 - Staff dormitories or co-living spaces that want a lightweight rewards system
 - Event reward systems with physical / service exchange
 
-## Technical Highlights (example)
+## 🛠 Technical Highlights 
 - Clear frontend / backend separation for easier development and deployment
 - Configurable scoring rules to reduce the need for code changes for common ops
 - Audit logging and transactional safety to ensure correctness of points flows
