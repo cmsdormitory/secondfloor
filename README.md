@@ -31,4 +31,4 @@ Maintainer: @JasonChow123
 For custom features or deployment help, open an Issue or reach out via the contact listed in the repository.
 
 ## License
-Add project license here (e.g., MIT, Apache-2.0).
+001100001100001100001100001100001100001100001100001100
