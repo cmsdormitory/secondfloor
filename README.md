@@ -27,8 +27,9 @@ cmos.dormitory turns daily dorm activities (cleaning, duty shifts, participation
 Contributions are welcome. See CONTRIBUTING.md for details on reporting issues, creating pull requests, and coding standards.
 
 ## 🧾 Contact & Support
-Maintainer: @JasonChow123  
+Maintainer: @JasonChow in 2F  
 For custom features or deployment help, open an Issue or reach out via the contact listed in the repository.
 
 ## Finally
 You can see the picture ，it is so cool :)
+If you have question ，you can find Mr.Wong
