@@ -1,5 +1,6 @@
 # 🎯 cmos.dormitory — Dormitory Points & Rewards System 
 
+**此版本為舊版本，功能不全，只作參考**
 Dormitory Points & Rewards System — a lightweight platform designed for managing points, evaluations, and redemptions in dormitory or shared-living scenarios.
 
 ## <img src="https://img.shields.io/badge/Project%20Overview- -2563EB?style=flat-square" alt="blue"> Project Overview
